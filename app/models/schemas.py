@@ -1,9 +1,3 @@
-diff --git a/app/models/schemas.py b/app/models/schemas.py
-new file mode 100644
-index 0000000000000000000000000000000000000000..0cad993f1279f42275ac5ef97b7009d3d1f7e51b
---- /dev/null
-+++ b/app/models/schemas.py
-@@ -0,0 +1,37 @@
 +from enum import Enum
 +from pydantic import BaseModel
 +from typing import Optional
