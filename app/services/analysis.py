@@ -1,9 +1,3 @@
-diff --git a/app/services/analysis.py b/app/services/analysis.py
-new file mode 100644
-index 0000000000000000000000000000000000000000..0b595454f10fcfc865b9e9b9c9a4747b97145078
---- /dev/null
-+++ b/app/services/analysis.py
-@@ -0,0 +1,42 @@
 +import uuid
 +from typing import Dict, Optional
 +
