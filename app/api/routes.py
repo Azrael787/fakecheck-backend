@@ -1,5 +1,5 @@
 from fastapi import APIRouter, BackgroundTasks, File, HTTPException, UploadFile
-from app.models.schemas import AnalysisResponse, AnalysisStatusResponse, AnalysisStatus, AnalysisResult
+from app.models.schemas import AnalysisStatusResponse, AnalysisStatus, AnalysisResult
 from app.services.analysis import analyze_file, create_job, get_job
 
 router = APIRouter()
