@@ -1,12 +1,10 @@
-from app.services.analysis import run_full_analysis
-from app.models.schemas import AnalysisResult
+from app.services.ensemble import run_ensemble
 
-def analyze_image_bytes(image_bytes: bytes, filename: str) -> AnalysisResult:
-    """
-    Главная точка анализа изображения.
-    """
-    result = run_full_analysis(
-        image_bytes=image_bytes,
-        filename=filename
-    )
-    return result
+def analyze_image(image_bytes: bytes, filename: str):
+    result = run_ensemble(image_bytes)
+    return {
+        "filename": filename,
+        "verdict": result["verdict"],
+        "confidence": int(result["score"] * 100),
+        "signals": result["signals"]
+    }
