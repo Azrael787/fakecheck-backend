@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Dict, Any
+from typing import Dict, Any, List
 
 class AnalysisSignal(BaseModel):
     name: str
@@ -8,6 +8,6 @@ class AnalysisSignal(BaseModel):
 
 class AnalysisResult(BaseModel):
     filename: str
-    probability_ai_generated: float
     verdict: str
+    confidence: int
     signals: List[AnalysisSignal]
