@@ -1,30 +1,29 @@
-import uuid
-from typing import Dict, Optional
+from app.services.metadata import analyze_metadata
+from app.services.visual import analyze_visual_artifacts
+from app.services.statistical import analyze_pixel_statistics
+from app.models.schemas import AnalysisResult, AnalysisSignal
 
-from fastapi import UploadFile
+def run_full_analysis(image_bytes: bytes, filename: str) -> AnalysisResult:
+    signals: list[AnalysisSignal] = []
 
-from app.models.schemas import AnalysisResult, AnalysisStatus
+    # 1. Метаданные
+    meta = analyze_metadata(image_bytes)
+    signals.append(meta)
 
-_JOBS: Dict[str, AnalysisResult] = {}
+    # 2. Визуальные артефакты (без ML)
+    visual = analyze_visual_artifacts(image_bytes)
+    signals.append(visual)
 
+    # 3. Статистические паттерны
+    stats = analyze_pixel_statistics(image_bytes)
+    signals.append(stats)
 
-def create_job() -> str:
-    job_id = str(uuid.uuid4())
-    _JOBS[job_id] = AnalysisResult(
-        score=0.0,
-        verdict="pending",
-        reasons=[],
-        sources=[]
+    # Итоговая вероятность
+    score = sum(s.score for s in signals) / len(signals)
+
+    return AnalysisResult(
+        filename=filename,
+        probability_ai_generated=round(score, 3),
+        signals=signals,
+        verdict="likely_ai" if score > 0.6 else "likely_real"
     )
-    return job_id
-
-
-def get_job(job_id: str) -> Optional[AnalysisResult]:
-    return _JOBS.get(job_id)
-
-
-def analyze_file(job_id: str, file: UploadFile) -> None:
-    job = _JOBS[job_id]
-    job.verdict = "processing"
-    _ = file.file.read()
-    job.verdict = "done"
