@@ -5,14 +5,14 @@ from app.services.color import analyze_color
 from app.services.ml_stub import analyze_ml
 
 WEIGHTS = {
-    "metadata": 0.25,
+    "metadata": 0.3,
     "noise": 0.2,
     "edges": 0.2,
     "color": 0.15,
-    "ml": 0.2,
+    "ml": 0.15,
 }
 
-def run_ensemble(image_bytes: bytes) -> dict:
+def run_ensemble(image_bytes: bytes):
     scores = {
         "metadata": analyze_metadata(image_bytes),
         "noise": analyze_noise(image_bytes),
@@ -24,14 +24,14 @@ def run_ensemble(image_bytes: bytes) -> dict:
     final_score = sum(scores[k] * WEIGHTS[k] for k in scores)
 
     if final_score > 0.85:
-        verdict = "High confidence AI-generated"
+        verdict = "high_confidence_ai"
     elif final_score > 0.6:
-        verdict = "Medium confidence"
+        verdict = "medium_confidence"
     else:
-        verdict = "Low confidence / likely real"
+        verdict = "likely_real"
 
     return {
         "score": round(final_score, 3),
         "verdict": verdict,
-        "signals": scores,
+        "signals": scores
     }
