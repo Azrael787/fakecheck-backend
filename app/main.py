@@ -1,12 +1,13 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
+from app.analyze import analyze_image
 
-from app.api.routes import router as api_router
-
-app = FastAPI(title="FakeCheck API", version="0.1")
-
-app.include_router(api_router)
-
+app = FastAPI()
 
 @app.get("/health")
-def health_check():
+def health():
     return {"status": "ok"}
+
+@app.post("/analyze")
+async def analyze(file: UploadFile = File(...)):
+    image_bytes = await file.read()
+    return analyze_image(image_bytes, file.filename)
