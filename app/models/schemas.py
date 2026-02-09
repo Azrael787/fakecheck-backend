@@ -1,23 +1,13 @@
-from enum import Enum
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Dict, Any
 
-
-class AnalysisStatus(str, Enum):
-    queued = "queued"
-    processing = "processing"
-    completed = "completed"
-    failed = "failed"
-
+class AnalysisSignal(BaseModel):
+    name: str
+    score: float
+    details: Dict[str, Any]
 
 class AnalysisResult(BaseModel):
-    score: float
+    filename: str
+    probability_ai_generated: float
     verdict: str
-    reasons: List[str]
-    sources: Optional[List[str]] = None
-
-
-class AnalysisStatusResponse(BaseModel):
-    job_id: str
-    status: AnalysisStatus
-    result: Optional[AnalysisResult] = None
+    signals: List[AnalysisSignal]
